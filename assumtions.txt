@@ -1,0 +1,2 @@
+the words present in the dictionary file will be printed including 1 letter 
+Any alpha-numeric words will be ignored
