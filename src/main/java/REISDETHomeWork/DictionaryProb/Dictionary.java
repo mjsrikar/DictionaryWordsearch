@@ -12,25 +12,28 @@ import java.util.stream.Collectors;
 public class Dictionary {
 	public static Set<String> dictionary;
 	private static Dictionary instance = new Dictionary();
-	 
+
 	static {
 		dictionary = new HashSet<String>();
-		List<String> list=new ArrayList<>();
-		try {			
-			File file = new File("D:\\Eclipse Projects\\DictionaryProb\\src\\main\\java\\REISDETHomeWork\\DictionaryProb\\database.txt");
+		List<String> list = new ArrayList<>();
+		try {
+
+			File file = new File(System.getProperty("user.dir")
+					+ "\\src\\main\\java\\REISDETHomeWork\\DictionaryProb\\database2.txt");
 			Scanner sc = new Scanner(file);
-			while(sc.hasNextLine()) {
+			while (sc.hasNextLine()) {
 				list.add(sc.nextLine());
-			}	
+			}
 			sc.close();
 		} catch (IOException e) {
-			e.printStackTrace();			
+			e.printStackTrace();
 		}
-		dictionary=list.stream().map(s->s.toLowerCase()).filter(s->s.chars().allMatch(Character::isLetter)).collect(Collectors.toSet());	   
+		dictionary = list.stream().map(s -> s.toLowerCase()).filter(s -> s.chars().allMatch(Character::isLetter))
+				.collect(Collectors.toSet());
 	}
-	
+
 	private Dictionary() {
-		
+
 	}
 
 	public static Dictionary get() {
@@ -41,8 +44,8 @@ public class Dictionary {
 	private int[] scount(String s) {
 		int[] occurance = new int[26];
 		for (char c : s.toCharArray()) {
-			int alphabet_pos = c- 'a' ;
-			if (alphabet_pos >= 0 && alphabet_pos < 26) {				
+			int alphabet_pos = c - 'a';
+			if (alphabet_pos >= 0 && alphabet_pos < 26) {
 				occurance[alphabet_pos]++;
 			}
 		}
@@ -54,21 +57,39 @@ public class Dictionary {
 		int[] occurance = scount(input);
 		int[] dict = scount(dictionaryWord);
 		for (int i = 0; i < 26; i++) {
-		    if (occurance[i] == 0 && dict[i] > 0) {
+			if (occurance[i] == 0 && dict[i] > 0) {
 				return false;
 			} else if (occurance[i] < dict[i]) {
 				return false;
-			} 
+			}
 		}
 		return true;
 	}
 
+	/**
+	 * searches the input word in the dictionary for the matching words based on search criteria. 
+	 * @param input 
+	 * @return list of words found in the dictionary. Returns empty list if the input is null or empty or has special characters 
+	 */
 	public List<String> findmatch(String input) {
 		List<String> output = new ArrayList<String>();
-		for (String str : dictionary) {
-			if (isEnglishWord(input, str)) {
-				output.add(str);
+		
+		if(input != null && !input.isEmpty()) {
+			
+			for(char ch : input.toCharArray()) {
+				if(!Character.isLetter(ch)) {
+					System.out.println("Found a special character, cannot process a special character");
+					return output;					
+				}
 			}
+			
+			for (String str : dictionary) {
+				if (isEnglishWord(input, str)) {
+					output.add(str);
+				}
+			}
+		}else {
+			System.out.println("Input is either null or empty");
 		}
 		return output;
 	}
